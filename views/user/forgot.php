@@ -3,14 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/**
- * @var yii\web\View $this
- * @var yii\widgets\ActiveForm $form
- * @var amnah\yii2\user\models\forms\ForgotForm $model
- */
-
-$this->title = Yii::t('user', 'Forgot password');
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = Yii::t('app', 'Forgot password');
 ?>
 <div class="user-default-forgot">
 
@@ -30,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php $form = ActiveForm::begin(['id' => 'forgot-form']); ?>
                     <?= $form->field($model, 'email') ?>
                     <div class="form-group">
-                        <?= Html::submitButton(Yii::t('user', 'Submit'), ['class' => 'btn btn-primary']) ?>
+                        <?= Html::submitButton(Yii::t('app', 'Submit'), ['class' => 'btn btn-primary']) ?>
                     </div>
                 <?php ActiveForm::end(); ?>
             </div>

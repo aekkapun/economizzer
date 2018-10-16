@@ -11,7 +11,7 @@ $this->title = $model->desc_category;
     <hr/>
     <h2 class="pull-right">
     
-        <?= Html::a('<i class="glyphicon glyphicon-pencil"></i> '.Yii::t('app', 'Update'), ['update', 'id' => $model->id_category], [
+        <?= Html::a('<i class="fa fa-pencil-square-o"></i> '.Yii::t('app', 'Update'), ['update', 'id' => $model->id_category], [
                 'class' => 'btn btn-primary',
                 ]
                 ) ?> 
@@ -27,9 +27,22 @@ $this->title = $model->desc_category;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id_category',
             'desc_category',
-            'hexcolor_category',
+            [
+            'attribute' => 'hexcolor_category',
+            'format' => 'raw',
+            'value' => '<strong style="color:'.$model->hexcolor_category.'"><i class="fa fa-tag"></i></strong>',
+            ],
+            [
+            'attribute' => 'parent_id',
+            'format' => 'raw',
+            'value' => $model->parent ? $model->parent->desc_category : null,
+            ],
+            [
+            'attribute' => 'is_active',
+            'format' => 'raw',
+            'value' => $model->is_active == 1 ? Yii::t('app', 'Yes') : Yii::t('app', 'No'),
+            ],
         ],
     ]) ?>
 

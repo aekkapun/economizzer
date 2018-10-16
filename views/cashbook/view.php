@@ -3,12 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Cashbook */
-
 $this->title = Yii::t('app', 'Entry') . " #".$model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Entry'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="cashbook-view">
 
@@ -16,7 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <hr/>
     <h2 class="pull-right">
         
-        <?= Html::a('<i class="glyphicon glyphicon-pencil"></i> '.Yii::t('app', 'Update'), ['update', 'id' => $model->id], [
+        <?= Html::a('<i class="fa fa-pencil-square-o"></i> '.Yii::t('app', 'Update'), ['update', 'id' => $model->id], [
                 'class' => 'btn btn-primary ',
                 ]
                 ) ?> 
@@ -30,14 +25,14 @@ $this->params['breadcrumbs'][] = $this->title;
         
     </h2>
     
-
-    <?php if ($flash = Yii::$app->session->getFlash("Entry-success")): ?>
-
-        <div class="alert text-success">
-            <p><em><?= $flash ?></em></p>
+    <!-- Alerts -->
+    <?php foreach (Yii::$app->session->getAllFlashes() as $key=>$message):?>
+        <?php $alertClass = substr($key,strpos($key,'-')+1); ?>
+        <div class="alert alert-dismissible alert-<?=$alertClass?>" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <p><?=$message?></p>
         </div>
-
-    <?php endif; ?>
+    <?php endforeach ?> 
 
     <h1 class="text-hide">Custom heading</h1>
 
@@ -67,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
            'attribute'=>'attachment',
            'format' => 'raw',
-           'value' => $model->attachment == null ? 'sem anexo' : Html::a('Abrir',"/economizzer/web/attachment/".$model->user_id."/".$model->attachment, ['target' => '_blank']),
+           'value' => $model->attachment == null ? Yii::t('app', 'No attachment') : '<span class="glyphicon glyphicon-paperclip"></span> '.Html::a(Yii::t('app', 'Attach'), Yii::$app->request->baseUrl."/attachment/".$model->user_id."/".$model->attachment, ['target' => '_blank']),
             ],            
             [
             'attribute' => 'inc_datetime',

@@ -5,12 +5,23 @@ use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 use app\models\Category;
 use kartik\widgets\DatePicker;
-
+use kartik\number\NumberControl;
 ?>
 
-<?php $form = ActiveForm::begin(['options' => ['enctype'=>'multipart/form-data']]); ?>
-
 <div class="cashbook-form">
+
+<div class="col-md-8">
+    <?php $form = ActiveForm::begin([
+        'id' => 'cashbookform',
+        'options' => [
+            'enctype'=>'multipart/form-data',
+            'class' => 'form-horizontal',
+            ],
+        'fieldConfig' => [
+            'template' => "{label}\n<div class=\"col-lg-4\">{input}</div>\n<div class=\"col-lg-7\">{error}</div>",
+            'labelOptions' => ['class' => 'col-lg-2 control-label'],
+        ],
+    ]); ?>
 
     <ul class="nav nav-tabs">
         <li class="active"><a href="#home" data-toggle="tab"><i class="fa fa-cube"></i> <?php echo Yii::t('app', 'Basic Information');?></a></li>
@@ -18,57 +29,51 @@ use kartik\widgets\DatePicker;
     </ul>
     <div class="tab-content">
     <div class="tab-pane active" id="home">
-
-    <?= $form->field($model, 'type_id')->radioList([
+    <p>
+    <?php 
+    echo $form->field($model, 'type_id')->radioList([
         '1' => Yii::t('app', 'Revenue'), 
         '2' => Yii::t('app', 'Expense'),
-        ], ['itemOptions' => ['class' =>'radio-inline','labelOptions'=>array('style'=>'padding:5px;')]])->label('') ?>
+        ], ['itemOptions' => ['class' =>'radio-inline','labelOptions'=>array('style'=>'padding:4px;')]])->label('');
+    ?>
 
-    <div class="row">
-        <div class="col-sm-2">
-        <?php
-            echo DatePicker::widget([
-                'model' => $model,
-                'form' => $form,
-                'attribute' => 'date',
-                'type' => DatePicker::TYPE_INPUT,
-                'size' => 'sm',
-                'value' => '2015-01-30',
-                //'readonly' => true,
-                'options' => [
-                    'placeholder' => '',
-                ],
-                'pluginOptions' => [
-                    'autoclose'=>true,
-                    'todayHighlight' => true,
-                    'format' => 'yyyy-mm-dd',
-                ]
-            ]);
-        ?></div>
-        </div>
-    <p>
-    <div class="row">
-        <div class="col-sm-2">
-        <?= $form->field($model, 'value')->textInput(['size' => 10]) ?>
-        </div>
-    </div>
+    <?php
+        echo DatePicker::widget([
+            'model' => $model,
+            'form' => $form,
+            'attribute' => 'date',
+            'type' => DatePicker::TYPE_INPUT,
+            'size' => 'sm',
+            'pluginOptions' => [
+                'autoclose'=>true,
+                'todayHighlight' => true,
+                'format' => 'yyyy-mm-dd',
+            ]
+        ]);
+    ?>
+    
+    <?php 
+    echo $form->field($model, 'value')->widget(NumberControl::classname());
+    ?>
 
-    <div class="row">
-        <div class="col-sm-3">
-        <?= $form->field($model, 'category_id')->dropDownList(ArrayHelper::map(Category::find()->where(['user_id' => Yii::$app->user->identity->id])->orderBy("desc_category ASC")->all(), 'id_category', 'desc_category'),['prompt'=>'-- Selecione --'])  ?>
-        </div>
-    </div>
+    <?=
+    $form->field($model, 'category_id', [
+        'inputOptions' => [
+            'class' => 'selectpicker '
+        ]
+    ]
+    )->dropDownList(app\models\Category::getHierarchy(), ['prompt' => Yii::t('app', 'Select'), 'class'=>'form-control required']);
+    ?>
 
-    <div class="row">
-        <div class="col-sm-5">
-        <?= $form->field($model, 'description')->textInput(['maxlength' => 100]) ?>
-        </div>
-    </div>
+    <?= $form->field($model, 'description')->textInput(['maxlength' => 100]) ?>
 
     </div>
     <div class="tab-pane" id="profile">
 
-    <?= $form->field($model, 'is_pending')->checkbox() ?>
+    <?= $form->field($model, 'is_pending')->checkbox([
+        'label' => '',
+        'labelOptions'=>array('class'=>'col-lg-2 control-label'),
+        ])->label(Yii::t('app', 'Pending')) ?>
 
     <?= $form->field($model, 'file')->fileInput() ?>
 
@@ -76,9 +81,14 @@ use kartik\widgets\DatePicker;
     </div>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-floppy-o"></i> '.Yii::t('app', 'Save') : '<i class="fa fa-floppy-o"></i> '.Yii::t('app', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-primary grid-button btn-sm' : 'btn btn-primary grid-button btn-sm']) ?>
+        <div class="col-lg-offset-2 col-lg-10">
+        <?= Html::submitButton($model->isNewRecord ? '<i class="fa fa-floppy-o"></i> '.Yii::t('app', 'Save') : '<i class="fa fa-floppy-o"></i> '.Yii::t('app', 'Save'), ['class' => $model->isNewRecord ? 'btn btn-primary grid-button' : 'btn btn-primary grid-button']) ?>
+        </div>
     </div>
 
     <?php ActiveForm::end(); ?>
-
+</div>
+<div class="col-md-4">
+<!-- ADS test -->
+</div>
 </div>

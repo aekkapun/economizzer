@@ -5,13 +5,39 @@ $params = require(__DIR__ . '/params.php');
 $config = [
     'id' => 'economizzer',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
-    'defaultRoute' => 'cashbook/index',
-    //'language' => 'en',
+    'bootstrap' => [
+        'log',
+        [
+            'class' => 'app\components\LanguageSelector',
+            'supportedLanguages' => ['en', 'pt-br', 'ru', 'ko'],
+        ],
+    ],
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm'   => '@vendor/npm-asset',
+    ],
     'sourceLanguage' => 'en-US',
     'components' => [
+        // 'formatter' => [
+        //     'class' => 'yii\i18n\formatter',
+        //     'thousandSeparator' => '.',
+        //     'decimalSeparator' => ',',
+        // ],
+        'urlManager' => [
+            'class' => 'yii\web\UrlManager',
+            'showScriptName' => false,
+            'enablePrettyUrl' => true,
+            'rules' => array(
+                    '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                    '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                    '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+            ),
+        ],
+        'session' => [
+            'name' => '_economizzerSessionId',
+            'savePath' => __DIR__ . '/../runtime',
+        ],  
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'eco',
         ],
         'cache' => [
@@ -19,11 +45,12 @@ $config = [
         ],
         'user' => [
             'class' => 'amnah\yii2\user\components\User',
+            'identityClass' => 'app\models\User',
         ],
         'view' => [
                 'theme' => [
                     'pathMap' => [
-                        '@vendor/amnah/yii2-user/views/default' => '@app/views/user', // example: @app/views/user/default/login.php
+                        '@vendor/amnah/yii2-user/views/default' => '@app/views/user',
                     ],
                 ],
             ],        
@@ -34,7 +61,7 @@ $config = [
             'class' => 'yii\swiftmailer\Mailer',
             'useFileTransport' => true,
             'messageConfig' => [
-                'from' => ['master@economizzer.com' => 'Admin'], // this is needed for sending emails
+                'from' => ['master@economizzer.com' => 'Admin'],
                 'charset' => 'UTF-8',
             ]
         ],
@@ -53,15 +80,46 @@ $config = [
                 '*' => [
                         'class' => 'yii\i18n\PhpMessageSource',
                         'basePath' => '@app/messages',
-                        //'on missingTranslation' => ['app\components\TranslationEventHandler', 'handleMissingTranslation'],
+                ],
+            ],
+        ],
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'google' => [
+                    'class' => 'yii\authclient\clients\Google',
+                    'clientId' => '',
+                    'clientSecret' => '',
+                ],
+                'facebook' => [
+                    'class' => 'yii\authclient\clients\Facebook',
+                    'clientId' => '',
+                    'clientSecret' => '',
+                    'scope' => 'email',
+                ],
+            ]
+        ],
+        'assetManager' => [
+            'bundles' => [
+                'yii\authclient\widgets\AuthChoiceStyleAsset' => [
+                    'sourcePath' => '@app/widgets/authchoice/assets',
                 ],
             ],
         ],
     ],
     'modules' => [
+        'gridview' =>  [
+            'class' => '\kartik\grid\Module',
+        ],
         'user' => [
             'class' => 'amnah\yii2\user\Module',
-            // set custom module properties here ...
+            'controllerMap' => [
+                'default' => 'app\controllers\UserController',
+                'auth' => 'app\controllers\AuthController'
+            ],
+            'modelClasses'  => [
+                'Profile' => 'app\models\Profile',
+            ],
         ],
     ],
     'params' => $params,

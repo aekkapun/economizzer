@@ -2,13 +2,9 @@
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
+//use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
-/* @var $this \yii\web\View */
-/* @var $content string */
-
-AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -48,7 +44,6 @@ SCRIPT;
     <meta name="application-name" content="Economizzer">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
-
 </head>
 <body>
 
@@ -56,7 +51,7 @@ SCRIPT;
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => '<img src="images/logo-icon.png" style="height:20px;float:left;margin-right: 5px" align="absbottom">  Economizzer',
+                'brandLabel' => '<img src="'.Yii::$app->request->baseUrl.'/images/logo-icon.png" style="height:20px;float:left;margin-right: 5px" align="absbottom">  Economizzer',
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar navbar-default navbar-fixed-top',
@@ -66,23 +61,23 @@ SCRIPT;
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'encodeLabels' => false,
                 'items' => [
-                    ['label' => '<i class="fa fa-home"></i> '.Yii::t('app', 'Overview'), 'url' => ['/cashbook/overview'], 'visible' => !Yii::$app->user->isGuest,],
-                    ['label' => '<i class="fa fa-usd"></i> '.Yii::t('app', 'Entries'), 'url' => ['/cashbook/index'], 'visible' => !Yii::$app->user->isGuest,],
-                    ['label' => '<i class="fa fa-bullseye"></i> '.Yii::t('app', 'Targets'), 'url' => ['/cashbook/target'], 'visible' => !Yii::$app->user->isGuest,],
-                    ['label' => '<i class="fa fa-briefcase"></i> '.Yii::t('app', 'Options'), 'visible' => !Yii::$app->user->isGuest,
+                    ['label' => '<span class="glyphicon glyphicon-stats" aria-hidden="true"></span> '.Yii::t('app', 'Overview'), 'url' => ['/dashboard/overview'], 'visible' => !Yii::$app->user->isGuest,],
+                    ['label' => '<span class="glyphicon glyphicon-usd" aria-hidden="true"></span> '.Yii::t('app', 'Entries'), 'url' => ['/cashbook/index'], 'visible' => !Yii::$app->user->isGuest,],
+                    ['label' => '<span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span> '.Yii::t('app', 'Targets'), 'url' => ['/cashbook/target'], 'visible' => !Yii::$app->user->isGuest,],
+                    ['label' => '<span class="glyphicon glyphicon-cog" aria-hidden="true"></span> '.Yii::t('app', 'Options'), 'visible' => !Yii::$app->user->isGuest,
                     'items' => 
                         [
-                            ['label' => '<i class="fa fa-tag"></i> '.Yii::t('app', 'Category'), 'url' => ['/category/index']],
-                            //['label' => '<i class="fa fa-briefcase"></i> '.Yii::t('app', 'Type'), 'url' => ['/type/index']],
+                            ['label' => '<span class="glyphicon glyphicon-tags" aria-hidden="true"></span> '.Yii::t('app', 'Categories'), 'url' => ['/category/index']],
+                            // ['label' => '<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> '.Yii::t('app', 'Tools'), 'url' => ['/site/tools']],                            
                         ],
                     ],
                     Yii::$app->user->isGuest ?
-                    ['label' => '<i class="fa fa-user-plus"></i> '.Yii::t('app', 'Create an account'), 'url' => ['/user/register']] :
-                    ['label' => '<i class="fa fa-user"></i> '. Yii::$app->user->displayName,
+                    ['label' => '<span class="glyphicon glyphicon-user" aria-hidden="true"></span> '.Yii::t('app', 'Create an account'), 'url' => ['/user/register']] :
+                    ['label' => '<span class="glyphicon glyphicon-user" aria-hidden="true"></span> '. Yii::$app->user->displayName,
                     'items' => 
                         [
-                            ['label' => '<i class="fa fa-briefcase"></i> '.Yii::t('app', 'Account'), 'url' => ['/user/account']],
-                            ['label' => '<i class="fa fa-briefcase"></i> '.Yii::t('app', 'Profile'), 'url' => ['/user/profile']],
+                            ['label' => '<span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> '.Yii::t('app', 'Account'), 'url' => ['/user/account']],
+                            ['label' => '<span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span> '.Yii::t('app', 'Profile'), 'url' => ['/user/profile']],
                             '<li class="divider"></li>',
                             ['label' => '<i class="fa fa-unlock"></i> '.Yii::t('app', 'Sign Out'),
                                 'url' => ['/user/logout'],
@@ -102,7 +97,10 @@ SCRIPT;
     </div>
 
     <footer class="footer">
-        <div class="container" align="center">Copyright &copy; <?= date('Y') ?> - <?= Html::a('Economizzer', 'http://www.economizzer.org') ?>
+        <div class="container" align="center">
+            <?= Html::a('Economizzer', 'http://www.economizzer.org', ['target'=>'_blank']) ?> &copy; <?= date('Y') ?>  
+            <?= Html::a('<i class="fa fa-twitter-square fa-lg"></i>', 'https://twitter.com/economizzer', ['target'=>'_blank']) ?> 
+            <?= Html::a('<i class="fa fa-facebook-square fa-lg"></i>', 'https://www.facebook.com/economizzer', ['target'=>'_blank']) ?>
         </div>
     </footer>
 
